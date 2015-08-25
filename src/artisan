@@ -67,13 +67,8 @@ $app = $app->createApplication();
 
 $kernel = $app->make('Illuminate\Contracts\Console\Kernel');
 
-// If this is a symlink to the Artisan dev script
-// we are developping it, therefore we add a /fixture subdirectory
-// to prevent "boxing" with dir structure when testing BoilerplateCommands
-$postfix = '/fixture';
-
 // Setting the base path to the Package developement dir structure
-$app->setBasePath($artisanBaseDir . $postfix);
+$app->setBasePath($artisanBaseDir);
 
 $status = $kernel->handle(
     $input = new Symfony\Component\Console\Input\ArgvInput,

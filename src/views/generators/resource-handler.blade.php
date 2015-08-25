@@ -10,7 +10,7 @@ use {{ $handlerImp }};
 * 
 * We use Laravel's Service Container to dynamicaly inject the right {{ $Resource }} implementation
 */
-class {{ $Resource }}Handler @if (isset($handlerImp)) extends {{ $handler }} @endif {
+class {{ $Resource }}Handler @if (isset($handlerImp))extends {{ $handler }} @endif {
 
     /**
      * The {{ $resource }} implementation.

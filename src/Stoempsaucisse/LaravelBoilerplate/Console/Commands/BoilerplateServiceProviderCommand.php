@@ -13,7 +13,8 @@ class BoilerplateServiceProviderCommand extends Command
                                 {resourceName : The ResourceName.}
                                 {app=Stoempsaucisse : The app Name (Stoempsaucisse).}
                                 {--is-viewable-resource : Whether the ServiceProvider concerns a resource that has it\'s own create and update forms.}
-                                {--no-tests : Do not populate the tests directory with stubs}
+                                {--no-tests : Do not populate the tests directory with stubs.}
+                                {--no-views : Do not populate the views directory.}
                                 {--namespace= : Complete/Namespace to use. This overrides Namespace automatic definition (App\Resources).}
                                 {--contract-ext= : Namespaced Interface the Contract extends.}
                                 {--handler-imp= : Namespaced Interface the ResourceHandler implements.}
@@ -84,12 +85,14 @@ class BoilerplateServiceProviderCommand extends Command
 
         $this->placeholder['tests'] = ($this->option('no-tests')) ? false : true;
 
+        $this->placeholder['views'] = ($this->option('no-views')) ? false : true;
+
         if($this->option('contract-ext'))
         {   
             if(preg_match('/\\\|\//', $this->option('contract-ext')))
             {
                 $this->placeholder['contractExt'] = str_replace('/', '\\', $this->option('contract-ext'));
-                $this->placeholder['contract'] = substr($this->option('contract-ext'), strrpos($this->option('contract-ext'), '\\') + 1);
+                $this->placeholder['contract'] = substr($this->placeholder['contractExt'], strrpos($this->placeholder['contractExt'], '\\') + 1);
             }
             else
             {
@@ -102,7 +105,7 @@ class BoilerplateServiceProviderCommand extends Command
             if(preg_match('/\\\|\//', $this->option('handler-imp')))
             {
                 $this->placeholder['handlerImp'] = str_replace('/', '\\', $this->option('handler-imp'));
-                $this->placeholder['handler'] = substr($this->option('handler-imp'), strrpos($this->option('handler-imp'), '\\') + 1);
+                $this->placeholder['handler'] = substr($this->placeholder['handlerImp'], strrpos($this->placeholder['handlerImp'], '\\') + 1);
             }
             else
             {
@@ -167,9 +170,12 @@ class BoilerplateServiceProviderCommand extends Command
         {
             return false;
         }/**/
-        if(! $this->generateViewsFiles())
+        if($this->placeholder['views'])
         {
-            return false;
+            if(! $this->generateViewsFiles())
+            {
+                return false;
+            }
         }/**/
         if($this->placeholder['tests'])
         {
