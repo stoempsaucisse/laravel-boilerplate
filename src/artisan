@@ -1,0 +1,96 @@
+#!/usr/bin/env php
+<?php
+use Orchestra\Testbench\Traits\ApplicationTrait;
+
+/*
+|--------------------------------------------------------------------------
+| Dev Artisan script
+|--------------------------------------------------------------------------
+|
+| This is an Artisan script to use when developping a Package.
+| It uses Orchestra's bindings but redirect base, database, ... paths
+| to the Package development directory.
+|
+*/
+
+$artisanBaseDir = realpath(dirname($_SERVER['SCRIPT_FILENAME']));
+
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader
+| for our application. We just need to utilize it! We'll require it
+| into the script here so that we do not have to worry about the
+| loading of any our classes "manually". Feels great to relax.
+|
+*/
+require $artisanBaseDir.'/vendor/autoload.php';
+
+class LaravelBoilerplate {
+    use ApplicationTrait;
+
+    /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application   $app
+     *
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        // Define your environment setup.
+    }
+
+    /**
+     * Get package providers.  At a minimum this is the package being tested, but also
+     * would include packages upon which our package depends, e.g. Cartalyst/Sentry
+     * In a normal app environment these would be added to the 'providers' array in
+     * the config/app.php file.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return array
+     */
+    protected function getPackageProviders($app)
+    {
+        return [
+            'Stoempsaucisse\LaravelBoilerplate\BoilerplateCommandsServiceProvider',
+        ];
+    }
+}
+
+
+$app = new LaravelBoilerplate();
+$app = $app->createApplication();
+
+$kernel = $app->make('Illuminate\Contracts\Console\Kernel');
+
+// If this is a symlink to the Artisan dev script
+// we are developping it, therefore we add a /fixture subdirectory
+// to prevent "boxing" with dir structure when testing BoilerplateCommands
+$postfix = '/fixture';
+
+// Setting the base path to the Package developement dir structure
+$app->setBasePath($artisanBaseDir . $postfix);
+
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
+
+/*
+|--------------------------------------------------------------------------
+| Shutdown The Application
+|--------------------------------------------------------------------------
+|
+| Once Artisan has finished running. We will fire off the shutdown events
+| so that any final work may be done by the application before we shut
+| down the process. This is the last thing to happen to the request.
+|
+*/
+
+$kernel->terminate($input, $status);
+
+exit($status);
