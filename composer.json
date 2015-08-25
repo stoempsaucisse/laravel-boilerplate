@@ -33,7 +33,7 @@
         }
     },
     "scripts": {
-        "post-create-project-cmd": "Stoempsaucisse\\LaravelBoilerplate\\ComposerScripts::cpArtisan"
+        "cpArtisan": "Stoempsaucisse\\LaravelBoilerplate\\ComposerScripts::cpArtisan"
     },
     "minimum-stability": "stable"
 }
